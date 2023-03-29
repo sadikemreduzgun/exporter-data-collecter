@@ -96,7 +96,8 @@ def main(start,end,step,step_func,server,node_exist,lib_exist,win_exist):
     columns_libv = []
     execute_for_initial_col = True
     execute_once_initial_block = True
-    if node_exist:
+    
+    if libv_exist:
         for name, col in df_libvs.iterrows():
 
             # get query names and queries
