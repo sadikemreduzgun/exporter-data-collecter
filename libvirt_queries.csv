@@ -1,0 +1,33 @@
+,query_name,query
+0,Memory Used Percent,libvirt_domain_memory_stats_used_percent
+1,Total Memory inside VM,libvirt_domain_info_maximum_memory_bytes{}
+2,Available Memory İnside Working VM,libvirt_domain_memory_stats_usable_bytes{}
+3,Cache Memory,libvirt_domain_memory_stats_disk_cache_bytes{}
+4,Current Balloon Value,libvirt_domain_memory_stats_actual_balloon_bytes{}
+5,RSS value,libvirt_domain_memory_stats_rss_bytes{}
+6,Total CPU,libvirt_domain_info_virtual_cpus{}
+7,vCPU counts,libvirt_domain_info_virtual_cpus{}
+8,Network Traffic,irate(libvirt_domain_interface_stats_transmit_bytes_total{}[5m])
+9,Rate of Packages received on a network interface,rate(libvirt_domain_interface_stats_receive_packets_total{}[5m])
+10,Network dropped packages number,rate(libvirt_domain_interface_stats_transmit_drops_total{}[5m])
+11,Network packages number of errors received,rate(libvirt_domain_interface_stats_receive_errors_total{}[5m])
+12,Write Requests to a block device,irate(libvirt_domain_block_stats_write_requests_total{}[5m])
+13,Read Requests to a block device,irate(libvirt_domain_block_stats_read_requests_total{}[5m])
+14,Bytes written to a block device,irate(libvirt_domain_block_stats_write_bytes_total{}[5m])
+15,Bytes that are read from a block device,irate(libvirt_domain_block_stats_read_bytes_total{}[5m])
+16,Image Allocation,libvirt_domain_block_stats_allocation{}
+17,IOPS Read,rate(libvirt_domain_block_stats_read_requests_total{}[30s])
+18,IOPS Write,rate(libvirt_domain_block_stats_write_requests_total{}[30s])
+19,Throughput Read,rate(libvirt_domain_block_stats_read_bytes_total{}[30s])
+20,Throughput Write,rate(libvirt_domain_block_stats_write_bytes_total{}[30s])
+21,Network Recieved data (RX),rate(libvirt_domain_interface_stats_receive_bytes_total{}[30s])
+22,Network Sent data (TX),rate(libvirt_domain_interface_stats_transmit_bytes_total{}[30s])
+23,Network Received packets,rate(libvirt_domain_interface_stats_receive_packets_total{}[30s])
+24,Network Sent packets,rate(libvirt_domain_interface_stats_transmit_packets_total{}[30s])
+25,Error received on received packets,rate(libvirt_domain_interface_stats_receive_errors_total{}[30s])
+26,Error received on packets sent,rate(libvirt_domain_interface_stats_transmit_errors_total{}[30s])
+27,Drops of received packets,rate(libvirt_domain_interface_stats_receive_drops_total{}[30s])
+28,Drops of packets sent,rate(libvirt_domain_interface_stats_transmit_drops_total{}[30s])
+29,Total Machine Number,sum(libvirt_domain_info_meta{})
+30,Running VM number,count(libvirt_domain_info_vstate{} ==1)
+31,Number of VMs closed,count(libvirt_domain_info_vstate{} ==5)
