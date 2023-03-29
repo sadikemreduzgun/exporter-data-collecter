@@ -10,8 +10,8 @@ node_exist, libv_exist, win_exist = check_installed()
 len_node, len_lib = give_len()
 
 day = 0
-hour = 1
-minute = 0
+hour = 0
+minute = 1
 # define default step and query function step
 step = "20s"
 step_func = "30s"
@@ -24,13 +24,12 @@ def main(start,end,step,step_func,server,node_exist,lib_exist,win_exist):
     # create a list to contain log infos
     log = []
     # create a list to store the successfully reached data's query names
-    columns_node = ["time stamp"]
+    columns_node = ["time_stamp"]
     # create a list to store query names of data who had buffer error
     columns_node_buffer_error = []
     # crap booleans to store initial value in loop
     execute_once = True
     execute_once_buffer_err = True
-
     # iterate node queries
     for name, col in df_nodes.iterrows():
 
@@ -78,6 +77,7 @@ def main(start,end,step,step_func,server,node_exist,lib_exist,win_exist):
             # try to merge new metric data and old hold data
             try:
                 collected_node_data = np.concatenate((collected_node_data, metric_node.T), axis=1)
+                columns_node.append(query_name)
             # if shape of arrays are different(when buffer latency) there is an error
             except:
                 # sometimes for some queries a few data can't be collected, here it is fixed by doing similar things
@@ -169,7 +169,7 @@ def main(start,end,step,step_func,server,node_exist,lib_exist,win_exist):
 
                 # increment at the end of devices loop
                 in_count += 1
-
+    libv_processed_data = 100
     return collected_node_data, libv_processed_data, columns_node
 
 # get time_limit
@@ -201,19 +201,16 @@ for counted_time_divs in range(len_node):
 
         node_data,libv_data,titles_node = main(start,end,step,step_func,counted_time_divs,node_exist,libv_exist,win_exist)
         node_df = pd.DataFrame(node_data,columns=titles_node)
-        # node_df = pd.DataFrame(node_data)
+        #node_df = pd.DataFrame(node_data)
         node_df["time_stamp"] = node_df.apply(lambda x: datetime.fromtimestamp(int(x["time_stamp"])), axis=1)
 
-        libv_df = pd.DataFrame(libv_data)
 
         if crap_bool:
             hold_data = node_df
             crap_bool = False
-            hold_libv = libv_df
 
         else:
 
-            hold_libv = pd.concat((hold_libv, libv_df), axis=0, ignore_index=True)
             hold_data = pd.concat((hold_data,node_df),axis=0,ignore_index=True)
 
         hold_day = day
