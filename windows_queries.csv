@@ -1,0 +1,22 @@
+,query_name,query,description
+,bandwith type 1,(sum(irate(windows_net_bytes_total{instance=$}[1m])) > 1)* 8,net bandwith query 1 if doen't work type to hopefully work
+,bandwith type 2,sum(irate(windows_net_bytes_total{instance=$}[5m])) / sum(windows_net_current_bandwidth_bytes{instance=$}/8) * 100,type 2 bandwith
+,cpu load,sum by (mode) (rate(windows_cpu_time_total{instance=$}[5m])),there are cpu devices like user idle dpc interrupt priviliged consider those
+,cpu used percentage,"(100 - (avg by (instance) (irate(windows_cpu_time_total{mode=''idle','instance=$}[1m])) * 100))",check if right usage perc of cpu
+,physical memory free gb,windows_os_physical_memory_free_bytes{instance=$}/(1024*1024*1024),free gigabytes of memory
+,physical memory usage percentage,(windows_cs_physical_memory_bytes{instance=$}-windows_os_physical_memory_free_bytes{instance=$})/windows_cs_physical_memory_bytes{instance=$}*100,memory used percentage
+,virtual memory free gbs,windows_os_virtual_memory_free_bytes{instance=$}/(1024*1024*1024),free virtual memory gigabytes
+,virtual memory used percentage,(windows_os_virtual_memory_bytes{instance=$}-windows_os_virtual_memory_free_bytes{instance=$})/windows_os_virtual_memory_bytes{instance=$}*100,used virtual memory percentage
+,write C:,"irate(windows_logical_disk_write_bytes_total{instance=$, volume !~"HarddiskVolume.+"}[60s])/(1024*1024)",written megabytes in disk C
+,read C:,"irate(windows_logical_disk_read_bytes_total{instance=$, volume !~"HarddiskVolume.+"}[60s])",readed megabytes from C
+,total i/o ops,"rate(windows_logical_disk_split_ios_total{instance=$, volume !~"HarddiskVolume.+"}[60s])",total input and output operations
+,system threads,windows_system_threads{instance=$},threads
+,free storage space,"windows_logical_disk_free_bytes{instance=$, volume !~"HarddiskVolume.+"}",free space in the disk where is windows installed
+,processes done performed processes,windows_os_processes{instance=$},processes done in every scrape
+,received data in megabytes,sum(increase(windows_net_bytes_received_total{instance=$}[1h])) by (instance)/(1024*1024),data received in megabytes
+,sent data in megabytes,sum(increase(windows_net_bytes_sent_total{instance=$}[1h])) by (instance),data sent in megabytes
+,sent network packets error,irate(windows_net_packets_outbound_discarded_total{instance=$}[£]) + irate(windows_net_packets_outbound_errors_total{instance=$}[£]),total errors when packets sent
+,received network packets error,irate(windows_net_packets_received_discarded_total{instance=$}[£])+irate(windows_net_packets_received_errors_total{instance=$}[£]),total errors when packets received
+,max sent traffic of network card,max by (instance) (irate(windows_net_bytes_sent_total{nic!~'isatap.*|VPN.*'}[2m]))*8,max sent bytes
+,max received traffic of network card,max by (instance) (irate(windows_net_bytes_received_total{nic!~'isatap.*|VPN.*'}[2m]))*8,max received bytes
+,system exception dispaches,irate(windows_system_exception_dispatches_total{instance=$}[5m]),when exception that processor stops until finding required handler
