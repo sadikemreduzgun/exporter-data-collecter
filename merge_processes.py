@@ -5,14 +5,12 @@ import requests as rq
 import numpy as np
 from settings import *
 
-
 global log
 
 
 def limit_decimal(float_num, float_limit=decimal_limit):
-    "{:.2f}".format(float_num)
-    a = "{:." + str(float_limit) + "f}"
-    return a.format(float_num)
+
+    return round(float(float_num), int(float_limit))
 
 
 vectorized_limit_decimal = np.vectorize(limit_decimal)
@@ -64,7 +62,8 @@ def prepare_node(start,end,step,step_func,server):
         metric_data_node = np.array(metric_data_node['data']['result'][0]['values'])
 
         # select metric and time stamp data and get them ready for applying numpy's concatenate module
-        metric_node = metric_data_node[:, 1][np.newaxis]
+        metric_ll = vectorized_limit_decimal(metric_data_node[:, 1])
+        metric_node = metric_ll[np.newaxis]
         time_stamp = metric_data_node[:, 0][np.newaxis]
         # limit decimal point numbers
         vectorized_limit_decimal(metric_node)
@@ -78,6 +77,7 @@ def prepare_node(start,end,step,step_func,server):
             # try to merge new metric data and old hold data
             try:
                 collected_node_data = np.concatenate((collected_node_data, metric_node.T), axis=1)
+                columns_node.append(query_name)
             # if shape of arrays are different(when buffer latency) there is an error
             except:
                 # sometimes for some queries a few data can't be collected, here it is fixed by doing similar things
