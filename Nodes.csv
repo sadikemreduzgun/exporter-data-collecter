@@ -3,7 +3,7 @@ Memory Usage Percentage,"100 - ((node_memory_MemAvailable_bytes{instance=$node,j
 Memory Apps,node_memory_MemTotal_bytes{instance=$node,job=$job} - node_memory_MemFree_bytes{instance=$node,job=$job} - node_memory_Buffers_bytes{instance=$node,job=$job} - node_memory_Cached_bytes{instance=$node,job=$job} - node_memory_Slab_bytes{instance=$node,job=$job} - node_memory_PageTables_bytes{instance=$node,job=$job} - node_memory_SwapCached_bytes{instance=$node,job=$job}",used memory by applications
 Memory Pagetables,"node_memory_PageTables_bytes{instance=$node,job=$job}",used memory for to map between virtual and physical memory address
 Memory Swap Cache,"node_memory_SwapCached_bytes{instance=$node,job=$job}",cache memory which is not processed yet
-Memory Slab,"node_memory_Slab_bytes{instance=$node,job=$job}",Memory used by the kernel to cache data structures for its own use (caches like inode, dentry, etc)
+Memory Slab,"node_memory_Slab_bytes{instance=$node,job=$job}",Memory used by the kernel to cache data structures for its own use (caches like inode or dentry etc)
 Memory Cache,"node_memory_Cached_bytes{instance=$node,job=$job}",cache parked file data
 Memory Buffer,"node_memory_Buffers_bytes{instance=$node,job=$job}",Block device(eg. Hard Disk) cache
 Free Memory,"node_memory_MemFree_bytes{instance=$node,job=$job}",Free memory
@@ -25,8 +25,8 @@ Disk Read Megabytes,"irate(node_disk_read_bytes_total{instance=$node,job=$job}[$
 Disk Written Megabytes,"irate(node_disk_written_bytes_total{instance=$node,job=$job}[$__rate_interval])/(1024*1024)",Written Mbs
 I/O Utilization,"irate(node_disk_io_time_seconds_total{instance=$node,job=$job,device=~$diskdevices} [$__rate_interval])",i/o utilization
 Disk Space Used,"node_filesystem_size_bytes{instance=$node,job=$job,device!~'rootfs'} - node_filesystem_avail_bytes{instance=$node,job=$job,device!~'rootfs'}", Used storage
-Memory mapped,"node_memory_Mapped_bytes{instance=$node,job=$job}", Used memory in mapped pages, file which has been mmapped
-Memory Shmem,"node_memory_Shmem_bytes{instance=$node,job=$job}", Used Shared Memory(shared between several processes, thus including RAM disks)
+Memory mapped,"node_memory_Mapped_bytes{instance=$node,job=$job}", Used memory in mapped pages file which has been mmapped
+Memory Shmem,"node_memory_Shmem_bytes{instance=$node,job=$job}", Used Shared Memory(shared between several processes thus including RAM disks)
 Memory Shemhugepages,"node_memory_ShmemHugePages_bytes{instance=$node,job=$job}",Memory used by shared memory shmem and tmpfs allocated with huge pages
 Memory Shempmd Mapped Pages,"node_memory_ShmemPmdMapped_bytes{instance=$node,job=$job}", Amount of shared (shem/tmpfs) memory backed by huge pages
 Network Received ens3,"irate(node_network_receive_bytes_total{instance=$node,job=$job,device=ens3}[$__rate_interval])*8", Received data by network device ens3
