@@ -1,40 +1,19 @@
 from reach_time import *
-
+import numpy as np
 
 # organizes the query, selects and returns query
-def curly_organizer(string, selection="{job=node-exporter}", step="5s"):
+def curly_organizer(string, ip,step_func="5m"):
 
     # create a string to return
     hold_str = ""
-    # booleans for operations
-    # run once and if searched item is found, delete it.
-    boole1 = False
-    boole2 = False
 
     # look at letters one by one and organize
     for letter in string:
-        # when "{" is encountered, delete until "}"
-        # then place in "selection"
-        if letter == "{":
-            boole1 = True
-            pass
-        elif letter == "[":
-            boole2 = True
-            pass
-        # place chosen step time into
-        if boole1 or boole2:
+        if letter == "$":
+            hold_str += ip
 
-            if letter == "}":
-                hold_str += str(selection)
-                boole1 = False
-            elif letter == "]":
-                # after deleting [some time]
-                # place in desired time
-                hold_str += f"[{step}]"
-                boole2 = False
-            else:
-                pass
-
+        elif letter == "#":
+            hold_str += step_func
         # adds letters that are not in curly branches
         else:
 
@@ -108,22 +87,26 @@ def uptime_decoder(second):
 
 
 # improve it
-def time_div_step(day, hour, minute, step):
+def time_div_step(day, hour, minute,second, step):
 
     total_sec = 0
     total_sec += day*24*60*60
     total_sec += hour*60*60
     total_sec += minute*60
+    total_sec += second
 
     divider = int(total_sec / (11000*step)) +1
 
     # while data number is smaller than 11.000(10800 was set up because of such a nice number)
     # define a divider and act based on it.
-    fir, sec, thi, fou = uptime_decoder(int(total_sec/divider))
+    sec_over_per = int(total_sec/divider)
+    if (total_sec%divider!=0):
+        sec_over_per += 1
 
+    fir, sec, thi, fou = uptime_decoder(sec_over_per)
     # go into here and step variable
     return fir,sec,thi,fou, divider
-
+    #return uptime_decoder(int(total_sec/divider)), divider
 
 def return_instance(which="", start=give_default_dates()[0], end=give_default_dates()[1],st_num=0):
 
@@ -185,12 +168,26 @@ def give_len(start=give_default_dates()[0], end=give_default_dates()[1]):
         url = f"http://localhost:9090/api/v1/query_range?query={query}&start={start}&end={end}&step=30s"
 
         # get data using requests library
-        data = rq.get(url)
+#        data = rq.get(url)
         # turn data into dictionary to be able to pars
-        data = data.json()
-        len_libv = len(data['data']['result'])
+#        data = data.json()
+#        len_libv = len(data['data']['result'])
 
     except:
         pass
 
     return len_node, len_libv
+
+
+def fill_up_buffer_err(arr, size):
+    # give metric_ll
+    a = (np.array([0,1])[0])
+    print(arr.shape[0])
+    print(size)
+    if int(arr.shape[0]) == int(size):
+        return arr
+
+    arr = np.append(arr, a)
+    print(arr.shape[0])
+    return 1
+    #return fill_up_buffer_err(arr, size)
