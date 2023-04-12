@@ -19,10 +19,9 @@ vectorized_limit_decimal = np.vectorize(limit_decimal)
 def prepare_node(start,end,step,step_func,server):
     # load csv data into dataframes
     # df = pd.read_csv('all_queries.csv')
-    df_nodes = pd.read_csv("node_queries.csv")
-
+    df_nodes = pd.read_csv("nodes.csv")
     # create a list to store the successfully reached data's query names
-    columns_node = ["time stamp"]
+    columns_node = ["time_stamp"]
     # create a list to store query names of data who had buffer error
     columns_node_buffer_error = []
     # booleans to store initial value in loop
@@ -35,14 +34,13 @@ def prepare_node(start,end,step,step_func,server):
         query_name = col["query_name"]
         query = col["query"]
         # get instance to run curly organizer function
-        instance = "{instance=" + f'{return_instance("node", st_num=server)}' + "}"
+        instance = f'{return_instance("node", st_num=server)}'
 
         # run curly organizer
         url = curly_organizer(query, instance, step_func)
 
         # organize url(request) to prevent clutter
         url = organize_url(url, start, end, step)
-
         # get data using requests modul
         metric_data_node = rq.get(url).json()
         # check if any error happen
@@ -53,7 +51,6 @@ def prepare_node(start,end,step,step_func,server):
                 continue
 
         except:
-
             print("Potential time error. Please check if start and end times relevant.")
             log.append("an error occured:\tERROR IN MAIN LOOP! ")
             continue
@@ -65,8 +62,6 @@ def prepare_node(start,end,step,step_func,server):
         metric_ll = vectorized_limit_decimal(metric_data_node[:, 1])
         metric_node = metric_ll[np.newaxis]
         time_stamp = metric_data_node[:, 0][np.newaxis]
-        # limit decimal point numbers
-        vectorized_limit_decimal(metric_node)
         # hold first data and to merge with metric data
         if execute_once:
             collected_node_data = np.concatenate((time_stamp.T, metric_node.T), axis=1)
@@ -78,16 +73,30 @@ def prepare_node(start,end,step,step_func,server):
             try:
                 collected_node_data = np.concatenate((collected_node_data, metric_node.T), axis=1)
                 columns_node.append(query_name)
+                print(metric_ll.shape[0])
             # if shape of arrays are different(when buffer latency) there is an error
             except:
+
+                print("aaaaa")
                 # sometimes for some queries a few data can't be collected, here it is fixed by doing similar things
-                columns_node_buffer_error.append(query_name)
+                a = (np.array([0,1])[0])
+                metric_node = np.append(metric_ll, a)
+                print(metric_node.shape)
+                metric_node = fill_up_buffer_err(metric_node, metric_node.shape[0])
+                metric_node = metric_node[np.newaxis]
+                collected_node_data = np.concatenate((collected_node_data, metric_node.T), axis=1)
+                print(metric_node.shape)
+                columns_node.append(query_name)
+                """columns_node_buffer_error.append(query_name)
                 if execute_once_buffer_err:
                     collected_node_data_buffer_err = metric_node.T
                     execute_once_buffer_err = False
                 else:
-                    collected_node_data_buffer_err = np.concatenate((collected_node_data_buffer_err, metric_node.T), axis=1)
-
+                    try:
+                        collected_node_data_buffer_err = np.concatenate((collected_node_data_buffer_err, metric_node.T), axis=1)
+                    except:
+                        print("ops, eine probleme")
+    """
     return collected_node_data, columns_node
 
 
