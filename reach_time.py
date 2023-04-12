@@ -4,19 +4,21 @@ import requests as rq
 import random
 
 
-def give_default_dates(day_back=0, hour_back=0, min_back=30, end_recent_day=0, end_recent_hour=0, end_recent_min=0):
+def give_default_dates(now=datetime.now(),day_back=0, hour_back=0, min_back=30,sec_back=0, end_recent_day=0, end_recent_hour=0, end_recent_min=0,end_recent_sec=0):
     # define a variable to go recursively if data point isn't found
     recursive_hour_back = 3
     # get date one day ago
-    end_time = datetime.now() - timedelta(days=end_recent_day, hours=end_recent_hour, minutes=end_recent_min)
+    #end_time = datetime.now() - timedelta(days=end_recent_day, hours=end_recent_hour, minutes=end_recent_min,seconds=end_recent_sec)
+    end_time = now - timedelta(days=end_recent_day, hours=end_recent_hour, minutes=end_recent_min,seconds=end_recent_sec)
     # stop the change of number of metrics in the loop in main.py, get stable time because it always is changing
-    end_time -= timedelta(seconds=end_time.second, microseconds=end_time.microsecond)
-
+    #end_time -= timedelta(seconds=end_time.second, microseconds=end_time.microsecond)
+    end_time -= timedelta(microseconds=end_time.microsecond)
     # get date 1 day and 5 mins. ago
-    start_time = (datetime.now() - timedelta(days=day_back, hours=hour_back, minutes=min_back))
+    #start_time = (datetime.now() - timedelta(days=day_back, hours=hour_back, minutes=min_back,seconds=sec_back))
+    start_time = (now - timedelta(days=day_back, hours=hour_back, minutes=min_back,seconds=sec_back))
     # stop the change of number of metrics in the loop in main.py, get stable time because it always is changing
-    start_time -= timedelta(seconds=start_time.second, microseconds=start_time.microsecond)
-
+    #start_time -= timedelta(seconds=start_time.second, microseconds=start_time.microsecond)
+    start_time -= timedelta(microseconds=start_time.microsecond)
     # turn date into string
     end = str(end_time.date())
     # turn date into the format which is used on url
@@ -56,7 +58,7 @@ def give_default_dates(day_back=0, hour_back=0, min_back=30, end_recent_day=0, e
     print(start, end)"""
     # return processed dates
     return start, end
-
+print(give_default_dates()[0],  give_default_dates()[1])
 # 2023-02-21T10:59:25.479Z
 # Output: The current date and time is 2022-03-19 10:05:39.482383
 # print(give_default_dates(1))
