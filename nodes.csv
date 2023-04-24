@@ -1,4 +1,4 @@
-query name,query,description
+query_name,query,description
 Memory Usage Percentage,"100 - ((node_memory_MemAvailable_bytes{instance=$} * 100) / node_memory_MemTotal_bytes{instance=$}),s
 Memory Apps,node_memory_MemTotal_bytes{instance=$} - node_memory_MemFree_bytes{instance=$} - node_memory_Buffers_bytes{instance=$} - node_memory_Cached_bytes{instance=$} - node_memory_Slab_bytes{instance=$} - node_memory_PageTables_bytes{instance=$} - node_memory_SwapCached_bytes{instance=$}",used memory by applications
 Memory Pagetables,"node_memory_PageTables_bytes{instance=$}",used memory for to map between virtual and physical memory address
